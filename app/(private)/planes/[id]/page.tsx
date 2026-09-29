@@ -42,7 +42,7 @@ export default async function PlanPage({
       </Link>
       <div className="mt-3 aspect-[16/9] max-h-[420px] w-full overflow-hidden rounded-sm">
         <Photo
-          src={plan.imageUrl}
+          src={plan?.imageUrl}
           alt={`${plan.title}, Barcelona`}
           tone={toneOf(plan.category)}
           label={plan.title}
