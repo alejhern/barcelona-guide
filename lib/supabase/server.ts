@@ -77,16 +77,26 @@ export async function storageRemove(urls: string[]) {
     })
     .filter((value): value is string => Boolean(value));
   if (prefixes.length === 0) return;
-  const r = await fetch(`${url}/storage/v1/object/remove`, {
-    method: "POST",
-    headers: {
-      apikey: key!,
-      Authorization: `Bearer ${key}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ prefixes }),
-  });
-  if (!r.ok) throw new Error(`Supabase Storage ${r.status}: ${await r.text()}`);
+  const responses = await Promise.all(
+    prefixes.map((path) => {
+      const encodedPath = path
+        .split("/")
+        .map((part) => encodeURIComponent(part))
+        .join("/");
+      return fetch(`${url}/storage/v1/object/${storageBucket}/${encodedPath}`, {
+        method: "DELETE",
+        headers: {
+          apikey: key!,
+          Authorization: `Bearer ${key}`,
+        },
+      });
+    }),
+  );
+  const failed = responses.find((response) => !response.ok);
+  if (failed)
+    throw new Error(
+      `Supabase Storage ${failed.status}: ${await failed.text()}`,
+    );
 }
 
 export async function storageSignedUrl(path: string, expiresIn = 3600) {
