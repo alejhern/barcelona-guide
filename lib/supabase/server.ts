@@ -38,3 +38,89 @@ export async function sb<T = unknown>(
   if (!r.ok) throw new Error(`Supabase ${r.status}: ${await r.text()}`);
   return r.status === 204 ? [] : r.json();
 }
+
+const storageBucket = process.env.SUPABASE_STORAGE_BUCKET ?? "memories";
+
+export async function storageUpload(
+  path: string,
+  file: ArrayBuffer,
+  contentType: string,
+) {
+  if (!supabaseReady())
+    throw new Error("Supabase Storage no está configurado.");
+  const r = await fetch(`${url}/storage/v1/object/${storageBucket}/${path}`, {
+    method: "POST",
+    headers: {
+      apikey: key!,
+      Authorization: `Bearer ${key}`,
+      "Content-Type": contentType,
+      "x-upsert": "false",
+    },
+    body: file,
+  });
+  if (!r.ok) throw new Error(`Supabase Storage ${r.status}: ${await r.text()}`);
+  return path;
+}
+
+export async function storageRemove(urls: string[]) {
+  if (!supabaseReady() || urls.length === 0) return;
+  const prefix = `/storage/v1/object/public/${storageBucket}/`;
+  const prefixes = urls
+    .map((value) => {
+      if (!value.startsWith("http")) return value;
+      try {
+        const path = new URL(value).pathname;
+        return path.startsWith(prefix) ? path.slice(prefix.length) : null;
+      } catch {
+        return null;
+      }
+    })
+    .filter((value): value is string => Boolean(value));
+  if (prefixes.length === 0) return;
+  const r = await fetch(`${url}/storage/v1/object/remove`, {
+    method: "POST",
+    headers: {
+      apikey: key!,
+      Authorization: `Bearer ${key}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ prefixes }),
+  });
+  if (!r.ok) throw new Error(`Supabase Storage ${r.status}: ${await r.text()}`);
+}
+
+export async function storageSignedUrl(path: string, expiresIn = 3600) {
+  if (!supabaseReady())
+    throw new Error("Supabase Storage no está configurado.");
+  const publicPrefix = `/storage/v1/object/public/${storageBucket}/`;
+  const normalized = path.startsWith("http")
+    ? new URL(path).pathname.split(publicPrefix)[1]
+    : path;
+  if (!normalized) throw new Error("Ruta de Storage no válida.");
+  const encodedPath = normalized
+    .split("/")
+    .map((part) => encodeURIComponent(part))
+    .join("/");
+  const r = await fetch(
+    `${url}/storage/v1/object/sign/${storageBucket}/${encodedPath}`,
+    {
+      method: "POST",
+      headers: {
+        apikey: key!,
+        Authorization: `Bearer ${key}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ expiresIn }),
+      cache: "no-store",
+    },
+  );
+  if (!r.ok) throw new Error(`Supabase Storage ${r.status}: ${await r.text()}`);
+  const data = (await r.json()) as { signedURL?: string };
+  if (!data.signedURL) throw new Error("Supabase no devolvió una URL firmada.");
+  if (data.signedURL.startsWith("http")) return data.signedURL;
+  if (data.signedURL.startsWith("/storage/v1/"))
+    return `${url}${data.signedURL}`;
+  if (data.signedURL.startsWith("/object/"))
+    return `${url}/storage/v1${data.signedURL}`;
+  return `${url}/storage/v1/${data.signedURL.replace(/^\/+/, "")}`;
+}

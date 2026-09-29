@@ -22,6 +22,9 @@ create table if not exists memories (
   date date not null,
   "createdAt" timestamptz not null default now()
 );
+insert into storage.buckets (id, name, public)
+values ('memories', 'memories', false)
+on conflict (id) do update set public = false;
 -- Sin políticas: solo el servidor (clave secreta) puede leer y escribir.
 alter table plans enable row level security;
 alter table memories enable row level security;

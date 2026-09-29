@@ -1,6 +1,6 @@
 # Barcelona Guide
 
-Guía privada de Barcelona: planes con mapa, reserva por Calendly y un álbum de Polaroids. Los datos viven en Supabase y las fotos en Vercel Blob.
+Guía privada de Barcelona: planes con mapa, reserva por Calendly y un álbum de Polaroids. Los datos y las fotos viven en Supabase.
 
 ```bash
 npm install
@@ -25,8 +25,8 @@ Sin ninguna contraseña, el acceso queda abierto como administrador en desarroll
 3. Settings → API Keys: copia la Project URL en `NEXT_PUBLIC_SUPABASE_URL` y la clave secreta (`sb_secret_…`) en `SUPABASE_SECRET_KEY`. No uses `sb_publishable_…` ni la subas al repositorio.
 4. Entra como administrador y crea tu primer plan con «Nuevo plan».
 
-## Vercel Blob
-Crea una Blob store **pública** en el proyecto de Vercel y trae el token con `vercel env pull .env.development.local`. Las fotos se suben desde `/planes/<plan>` y solo si el plan está hecho; el servidor lo comprueba.
+## Supabase Storage
+El esquema crea un bucket privado llamado `memories`. Las fotos se suben desde `/planes/<plan>` y solo si el plan está hecho; el servidor lo comprueba y genera URLs firmadas con caducidad. No se necesita ninguna variable adicional: se usa `SUPABASE_SECRET_KEY`.
 
 ## Calendly
 Pon tu enlace de evento en `NEXT_PUBLIC_CALENDLY_URL`. «Reservar este plan» lo abre con el plan como respuesta prefijada.
