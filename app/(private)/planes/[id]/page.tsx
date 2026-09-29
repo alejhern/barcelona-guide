@@ -4,7 +4,6 @@ import { PlanAdminBar } from "@/components/plans/PlanAdminBar";
 import { PlanPhotos } from "@/components/plans/PlanPhotos";
 import { Photo } from "@/components/ui/Polaroid";
 import { SetupNotice } from "@/components/ui/SetupNotice";
-import { bookingUrl } from "@/lib/calendly";
 import { getMemories, getPlan } from "@/lib/data";
 import { currentRole } from "@/lib/session";
 import { supabaseReady } from "@/lib/supabase/server";
@@ -94,7 +93,7 @@ export default async function PlanPage({
         <MapView plans={[plan]} className="h-72 md:h-full md:min-h-80" />
       </div>
       <div className="mt-10">
-        <BookingModal plan={plan} url={bookingUrl(plan)} />
+        <BookingModal plan={plan} />
       </div>
       <section aria-labelledby="fotos" className="mt-14">
         <h2 id="fotos" className="text-3xl">

@@ -48,6 +48,7 @@ export function PlanFormModal({
       visited: f.get("visited") === "on",
       stops: lines("stops"),
       tips: lines("tips"),
+      calendlyUrl: f.get("calendlyUrl") || null,
     };
     setBusy(true);
     setError("");
@@ -178,15 +179,14 @@ export function PlanFormModal({
             className={input}
           />
         </F>
-        <label className="flex items-center gap-2 text-sm">
+        <F t="Calendly">
           <input
-            type="checkbox"
-            name="visited"
-            defaultChecked={plan?.visited}
-            className="size-4 accent-clay"
+            name="calendlyUrl"
+            placeholder="URL de Calendly"
+            defaultValue={plan?.calendlyUrl ?? ""}
+            className={input}
           />
-          Plan ya hecho (permite subir fotografías)
-        </label>
+        </F>
         {error && (
           <p role="alert" className="text-sm text-clay">
             {error}

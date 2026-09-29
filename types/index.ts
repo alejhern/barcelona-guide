@@ -12,6 +12,7 @@ export type Plan = {
   distance?: string;
   stops?: string[];
   tips?: string[];
+  calendlyUrl?: string;
 };
 
 export type Memory = {

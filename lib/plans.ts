@@ -70,5 +70,6 @@ export function parsePlan(b: Record<string, unknown>, partial: boolean) {
   if (has("visited")) o.visited = b.visited === true;
   if (has("stops")) o.stops = list(b.stops);
   if (has("tips")) o.tips = list(b.tips);
+  if (has("calendlyUrl")) o.calendlyUrl = str(b.calendlyUrl, 300);
   return o;
 }
