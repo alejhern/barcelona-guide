@@ -68,7 +68,7 @@ export function PlanPhotos({
                 src={m.imageUrl}
                 alt={`${m.caption || "Fotografía"} — ${plan.title}`}
                 place={plan.title}
-                sub={`${fmtDate(m.date)}${m.caption ? ` · ${m.caption}` : ""}`}
+                sub={`${plan.date ? fmtDate(plan.date) : ""}${m.caption ? ` · ${m.caption}` : ""}`}
                 tone={toneOf(plan.category)}
                 rotate={ROTATIONS[i % ROTATIONS.length]}
                 delay={i * 0.06}

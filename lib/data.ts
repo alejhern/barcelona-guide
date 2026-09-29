@@ -17,7 +17,7 @@ const withSignedUrls = (memories: Memory[]) =>
 export async function getPlans(): Promise<Plan[]> {
   const [plans, rawMems] = await Promise.all([
     sb<Plan>("plans?select=*&order=title.asc"),
-    sb<Memory>("memories?select=planId,imageUrl&order=date.desc"),
+    sb<Memory>("memories?select=planId,imageUrl&order=createdAt.desc"),
   ]);
   const mems = await withSignedUrls(rawMems);
   const cover = new Map<string, string>();
@@ -30,7 +30,7 @@ export async function getPlan(id: string) {
 }
 export async function getMemories(planId?: string) {
   const memories = await sb<Memory>(
-    `memories?select=*&order=date.desc${planId ? `&planId=eq.${encodeURIComponent(planId)}` : ""}`,
+    `memories?select=*&order=createdAt.desc${planId ? `&planId=eq.${encodeURIComponent(planId)}` : ""}`,
   );
   return withSignedUrls(memories);
 }

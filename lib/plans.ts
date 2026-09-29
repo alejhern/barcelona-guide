@@ -56,6 +56,10 @@ export function parsePlan(b: Record<string, unknown>, partial: boolean) {
     o.category = CATEGORY_NAMES.includes(c) ? c : bad("categoría");
   }
   if (has("description")) o.description = str(b.description, 600);
+  if (has("date")) {
+    const date = str(b.date, 10);
+    o.date = date && /^\d{4}-\d{2}-\d{2}$/.test(date) ? date : null;
+  }
   if (has("duration")) o.duration = str(b.duration, 40) || bad("duración");
   if (has("difficulty")) o.difficulty = str(b.difficulty, 40) || null;
   if (has("distance")) o.distance = str(b.distance, 40) || null;

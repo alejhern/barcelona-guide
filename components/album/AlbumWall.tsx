@@ -64,6 +64,7 @@ export function AlbumWall({
       )}
       <div className="mt-10 columns-2 gap-5 md:columns-3 lg:columns-4">
         {memories.map((m, i) => {
+          const plan = plans.find((x) => x.id === m.planId);
           const { place, tone, alt } = info(m);
           return (
             <div
@@ -74,7 +75,7 @@ export function AlbumWall({
                 src={m.imageUrl}
                 alt={alt}
                 place={place}
-                sub={fmtDate(m.date)}
+                sub={plan?.date ? fmtDate(plan.date) : ""}
                 tone={tone}
                 rotate={ROTATIONS[i % ROTATIONS.length]}
                 delay={i * 0.06}
@@ -103,7 +104,12 @@ export function AlbumWall({
             </div>
             <figcaption className="pt-3">
               <p className="font-serif text-2xl">{s.place}</p>
-              <p className="text-sm text-ink/60">{fmtDate(sel.date, true)}</p>
+              <p className="text-sm text-ink/60">
+                {(() => {
+                  const plan = plans.find((x) => x.id === sel.planId);
+                  return plan?.date ? fmtDate(plan.date, true) : "";
+                })()}
+              </p>
               {sel.caption && <p className="mt-2 text-ink/80">{sel.caption}</p>}
             </figcaption>
             <button

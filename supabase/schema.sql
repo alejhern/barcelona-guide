@@ -4,6 +4,7 @@ create table if not exists plans (
   title text not null,
   category text not null,
   description text not null default '',
+  date date,
   duration text not null,
   difficulty text,
   distance text,
@@ -19,7 +20,6 @@ create table if not exists memories (
   "planId" text references plans(id) on delete cascade,
   "imageUrl" text not null,
   caption text not null default '',
-  date date not null,
   "createdAt" timestamptz not null default now()
 );
 insert into storage.buckets (id, name, public)

@@ -7,7 +7,7 @@ import { SetupNotice } from "@/components/ui/SetupNotice";
 import { getMemories, getPlan } from "@/lib/data";
 import { currentRole } from "@/lib/session";
 import { supabaseReady } from "@/lib/supabase/server";
-import { toneOf } from "@/lib/utils";
+import { fmtDate, toneOf } from "@/lib/utils";
 import type { Memory } from "@/types";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -29,6 +29,7 @@ export default async function PlanPage({
   ]);
   const meta = [
     ["Categoría", plan.category],
+    ["Fecha", plan.date ? fmtDate(plan.date) : undefined],
     ["Duración", plan.duration],
     ["Dificultad", plan.difficulty],
     ["Distancia", plan.distance],

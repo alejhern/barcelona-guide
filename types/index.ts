@@ -3,6 +3,7 @@ export type Plan = {
   title: string;
   category: string;
   description: string;
+  date?: string;
   duration: string;
   latitude: number;
   longitude: number;
@@ -20,5 +21,4 @@ export type Memory = {
   planId?: string;
   imageUrl: string;
   caption: string;
-  date: string;
 };

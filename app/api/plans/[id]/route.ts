@@ -44,7 +44,6 @@ export async function POST(req: Request, { params }: Ctx) {
   const { id } = await params;
   const planId = String(id);
 
-  const date = String(form?.get("date") ?? "");
   const caption = String(form?.get("caption") ?? "")
     .trim()
     .slice(0, 140);
@@ -53,7 +52,6 @@ export async function POST(req: Request, { params }: Ctx) {
   if (!ALLOWED[file.type]?.includes(ext))
     return err(415, "Formato no admitido. Usa JPG, PNG o WEBP.");
   if (file.size > MAX) return err(413, "La fotografía supera los 2 MB.");
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return err(400, "Fecha no válida.");
   if (!/^[a-z0-9-]{1,80}$/.test(planId)) return err(404, "Plan no encontrado.");
   try {
     const [plan] = await sb<Plan>(`plans?select=id,visited&id=eq.${planId}`);
@@ -77,7 +75,7 @@ export async function POST(req: Request, { params }: Ctx) {
     try {
       const [row] = await sb<Memory>("memories", {
         method: "POST",
-        body: { planId, imageUrl: url, caption, date },
+        body: { planId, imageUrl: url, caption },
       });
       return NextResponse.json(row, { status: 201 });
     } catch (e) {

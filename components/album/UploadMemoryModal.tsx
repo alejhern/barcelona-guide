@@ -50,16 +50,6 @@ export function UploadMemoryModal({
           />
         </label>
         <label className="block text-sm font-medium">
-          Fecha
-          <input
-            name="date"
-            type="date"
-            required
-            defaultValue={new Date().toISOString().slice(0, 10)}
-            className={field}
-          />
-        </label>
-        <label className="block text-sm font-medium">
           Descripción
           <input name="caption" maxLength={140} className={field} />
         </label>
