@@ -50,7 +50,9 @@ export default async function PlanPage({
       </div>
       <div className="w-full">
         <h1 className="mt-6 text-4xl sm:text-5xl">{plan.title}</h1>
-        <p className="mt-3 text-lg">{plan.description}</p>
+        <p className="mt-3 whitespace-pre-wrap text-justify text-lg">
+          {plan.description}
+        </p>
       </div>
       {role === "admin" && <PlanAdminBar plan={plan} />}
       <dl className="mt-6 grid grid-cols-2 gap-4 border-y border-ink/15 py-4 sm:grid-cols-5">
